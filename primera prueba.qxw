@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workspace>
+<Workspace xmlns="http://www.qlcplus.org/Workspace" CurrentWindow="FixtureManager">
+ <Creator>
+  <Name>Q Light Controller Plus</Name>
+  <Version>4.11.2</Version>
+  <Author>Paul Senderowitsch</Author>
+ </Creator>
+ <Engine>
+  <InputOutputMap>
+   <Universe Name="Universe 1" ID="0">
+    <Output Plugin="DMX USB" Line="0"/>
+    <Feedback Plugin="MIDI" Line="0"/>
+   </Universe>
+   <Universe Name="Universe 2" ID="1"/>
+   <Universe Name="Universe 3" ID="2"/>
+   <Universe Name="Universe 4" ID="3"/>
+  </InputOutputMap>
+  <Fixture>
+   <Manufacturer>Generic</Manufacturer>
+   <Model>Generic</Model>
+   <Mode>16 Channel</Mode>
+   <ID>0</ID>
+   <Name>HL Deseo</Name>
+   <Universe>0</Universe>
+   <Address>0</Address>
+   <Channels>16</Channels>
+  </Fixture>
+  <Function ID="0" Type="Scene" Name="Horizontales Max">
+   <Speed FadeIn="0" FadeOut="0" Duration="0"/>
+   <FixtureVal ID="0">0,255,1,0,2,255,3,0</FixtureVal>
+  </Function>
+  <Function ID="1" Type="Scene" Name="Horizontales Max Cruzado">
+   <Speed FadeIn="0" FadeOut="0" Duration="0"/>
+   <FixtureVal ID="0">0,255,1,0,2,255,3,255</FixtureVal>
+  </Function>
+  <Function ID="2" Type="Scene" Name="Horizontales Mid">
+   <Speed FadeIn="0" FadeOut="0" Duration="0"/>
+   <FixtureVal ID="0">0,150,1,0,2,150,3,0</FixtureVal>
+  </Function>
+  <Function ID="3" Type="Scene" Name="Horizontales Mid Cruzado ">
+   <Speed FadeIn="0" FadeOut="0" Duration="0"/>
+   <FixtureVal ID="0">0,150,1,0,2,150,3,255</FixtureVal>
+  </Function>
+  <Function ID="4" Type="Scene" Name="Horizontales Max Cruzado Invertido">
+   <Speed FadeIn="0" FadeOut="0" Duration="0"/>
+   <FixtureVal ID="0">0,255,1,255,2,255,3,0</FixtureVal>
+  </Function>
+  <Function ID="5" Type="Chaser" Name="Horizontales Pendular">
+   <Speed FadeIn="0" FadeOut="0" Duration="10000"/>
+   <Direction>Forward</Direction>
+   <RunOrder>Loop</RunOrder>
+   <SpeedModes FadeIn="Default" FadeOut="Default" Duration="Common"/>
+   <Step Number="0" FadeIn="0" Hold="0" FadeOut="0">1</Step>
+   <Step Number="1" FadeIn="0" Hold="0" FadeOut="0">4</Step>
+  </Function>
+  <Function ID="6" Type="Scene" Name="Apagado">
+   <Speed FadeIn="0" FadeOut="0" Duration="0"/>
+   <FixtureVal ID="0">0,0,1,0,2,0,3,0</FixtureVal>
+  </Function>
+  <Function ID="7" Type="Chaser" Name="Horizontales de 0 a Todo">
+   <Speed FadeIn="0" FadeOut="0" Duration="5"/>
+   <Direction>Forward</Direction>
+   <RunOrder>Loop</RunOrder>
+   <SpeedModes FadeIn="PerStep" FadeOut="PerStep" Duration="PerStep"/>
+   <Step Number="0" FadeIn="0" Hold="10000" FadeOut="0">6</Step>
+   <Step Number="1" FadeIn="5000" Hold="10000" FadeOut="5000">0</Step>
+  </Function>
+  <Function ID="8" Type="Scene" Name="Luz Prendida">
+   <Speed FadeIn="0" FadeOut="0" Duration="0"/>
+   <FixtureVal ID="0">12,255,13,255,14,255,15,255</FixtureVal>
+  </Function>
+  <Function ID="9" Type="Scene" Name="Luz Apagada">
+   <Speed FadeIn="0" FadeOut="0" Duration="0"/>
+   <FixtureVal ID="0">12,0,13,0,14,0,15,0</FixtureVal>
+  </Function>
+  <Function ID="10" Type="Chaser" Name="Strobo">
+   <Speed FadeIn="0" FadeOut="0" Duration="100"/>
+   <Direction>Forward</Direction>
+   <RunOrder>Loop</RunOrder>
+   <SpeedModes FadeIn="Default" FadeOut="Default" Duration="Common"/>
+   <Step Number="0" FadeIn="0" Hold="0" FadeOut="0">9</Step>
+   <Step Number="1" FadeIn="0" Hold="0" FadeOut="0">8</Step>
+  </Function>
+  <Function ID="14" Type="Collection" Name="Todo">
+   <Step Number="0">7</Step>
+   <Step Number="1">10</Step>
+  </Function>
+  <Function ID="17" Type="Chaser" Name="random">
+   <Speed FadeIn="0" FadeOut="0" Duration="400"/>
+   <Direction>Forward</Direction>
+   <RunOrder>Random</RunOrder>
+   <SpeedModes FadeIn="Default" FadeOut="Default" Duration="Common"/>
+   <Step Number="0" FadeIn="0" Hold="0" FadeOut="0">14</Step>
+   <Step Number="1" FadeIn="0" Hold="0" FadeOut="0">14</Step>
+   <Step Number="2" FadeIn="0" Hold="0" FadeOut="0">14</Step>
+  </Function>
+ </Engine>
+ <VirtualConsole>
+  <Frame Caption="">
+   <Appearance>
+    <FrameStyle>None</FrameStyle>
+    <ForegroundColor>Default</ForegroundColor>
+    <BackgroundColor>Default</BackgroundColor>
+    <BackgroundImage>None</BackgroundImage>
+    <Font>Default</Font>
+   </Appearance>
+   <Button Caption="Todo" ID="1" Icon="">
+    <WindowState Visible="False" X="175" Y="110" Width="170" Height="100"/>
+    <Appearance>
+     <FrameStyle>None</FrameStyle>
+     <ForegroundColor>Default</ForegroundColor>
+     <BackgroundColor>Default</BackgroundColor>
+     <BackgroundImage>None</BackgroundImage>
+     <Font>Default</Font>
+    </Appearance>
+    <Function ID="14"/>
+    <Action>Toggle</Action>
+    <Intensity Adjust="False">100</Intensity>
+   </Button>
+   <Button Caption="Strobo" ID="2" Icon="">
+    <WindowState Visible="False" X="510" Y="120" Width="190" Height="100"/>
+    <Appearance>
+     <FrameStyle>None</FrameStyle>
+     <ForegroundColor>Default</ForegroundColor>
+     <BackgroundColor>Default</BackgroundColor>
+     <BackgroundImage>None</BackgroundImage>
+     <Font>Default</Font>
+    </Appearance>
+    <Function ID="10"/>
+    <Action>Toggle</Action>
+    <Intensity Adjust="False">100</Intensity>
+   </Button>
+   <Button Caption="Horizontales de 0 a Todo" ID="15" Icon="">
+    <WindowState Visible="False" X="515" Y="245" Width="190" Height="90"/>
+    <Appearance>
+     <FrameStyle>None</FrameStyle>
+     <ForegroundColor>Default</ForegroundColor>
+     <BackgroundColor>Default</BackgroundColor>
+     <BackgroundImage>None</BackgroundImage>
+     <Font>Default</Font>
+    </Appearance>
+    <Function ID="7"/>
+    <Action>Toggle</Action>
+    <Intensity Adjust="False">100</Intensity>
+   </Button>
+  </Frame>
+  <Properties>
+   <Size Width="1920" Height="1080"/>
+   <GrandMaster ChannelMode="Intensity" ValueMode="Reduce" SliderMode="Normal"/>
+  </Properties>
+ </VirtualConsole>
+ <SimpleDesk>
+  <Engine/>
+ </SimpleDesk>
+</Workspace>
