@@ -25,27 +25,35 @@ MIDI_CREATE_DEFAULT_INSTANCE();
 #define ZMotorEnPin 2
 #define ZMotorDirPin 3
 #define ZMotorStepPin 4
+int ZMotorDir = 0;
+int ZMotorEn = 0;
 
 #define YMotorEnPin 5
 #define YMotorDirPin 6
 #define YMotorStepPin 7
+int YMotorDir = 0;
+int YMotorEn = 0;
 
 #define XMotorEnPin 8
 #define XMotorDirPin 9
 #define XMotorStepPin 10
+int XMotorDir = 0;
+int XMotorEn = 0;
 
 #define AMotorEnPin 11
 #define AMotorDirPin 12
 #define AMotorStepPin 13
+int AMotorDir = 0;
+int AMotorEn = 0;
 
 struct SpeedRange {
   int minSpeed;
   int maxSpeed;
 };
 
-SpeedRange motorSpeedRange = {20, 4000};
+SpeedRange motorSpeedRange = {1000, 6000};
 
-int speedVal = motorSpeedRange.maxSpeed;
+int speedVal = motorSpeedRange.minSpeed;
 int motAccel = 80;
 
 AccelStepper aStepper = AccelStepper(MotorInterfaceType, AMotorStepPin, AMotorDirPin);
@@ -53,22 +61,15 @@ AccelStepper xStepper = AccelStepper(MotorInterfaceType, XMotorStepPin, XMotorDi
 AccelStepper yStepper = AccelStepper(MotorInterfaceType, YMotorStepPin, YMotorDirPin);
 AccelStepper zStepper = AccelStepper(MotorInterfaceType, ZMotorStepPin, ZMotorDirPin);
 
-void enableMotors() {
-  digitalWrite(enableMotorsPin, LOW);
-}
-void disableMotors() {
-  digitalWrite(enableMotorsPin, HIGH);
-}
-
 int mapMIDIValueToSpeedRange(int value) {
   return map(value, 0, 128, motorSpeedRange.minSpeed, motorSpeedRange.maxSpeed);
 }
 
-bool mapMIDIValueToSpinDirection(int value) {
-  if (value < 128/2) {
-    return LOW;
+bool mapMIDIValueToBool(int value) {
+  if (value <= 128/2) {
+    return 0;
   } else {
-    return HIGH;
+    return 1;
   }
 }
 
@@ -76,27 +77,21 @@ void setup() {
  	MIDI.begin(MIDI_CHANNEL_OMNI);
   Serial.begin(115200);
 
-  pinMode(enableMotorsPin, OUTPUT);
-
-  pinMode(AMotorEnPin, INPUT);
+  pinMode(AMotorEnPin, OUTPUT);
   pinMode(AMotorDirPin, OUTPUT);
   pinMode(AMotorStepPin, OUTPUT);
 
-  pinMode(XMotorEnPin, INPUT);
+  pinMode(XMotorEnPin, OUTPUT);
   pinMode(XMotorDirPin, OUTPUT);
   pinMode(XMotorStepPin, OUTPUT);
 
-  pinMode(YMotorEnPin, INPUT);
+  pinMode(YMotorEnPin, OUTPUT);
   pinMode(YMotorDirPin, OUTPUT);
   pinMode(YMotorStepPin, OUTPUT);
 
-  pinMode(ZMotorEnPin, INPUT);
+  pinMode(ZMotorEnPin, OUTPUT);
   pinMode(ZMotorDirPin, OUTPUT);
   pinMode(ZMotorStepPin, OUTPUT);
-
-  enableMotors();
-
-  MIDI.setHandleControlChange(readMIDI);
 
   xStepper.setMaxSpeed(motorSpeedRange.maxSpeed);
   xStepper.setSpeed(speedVal);
@@ -106,6 +101,8 @@ void setup() {
   zStepper.setSpeed(speedVal);
   aStepper.setMaxSpeed(motorSpeedRange.maxSpeed);
   aStepper.setSpeed(speedVal);
+
+  MIDI.setHandleControlChange(readMIDI);
 }
 
 void readMIDI(byte channel, byte number, byte value) {
@@ -122,39 +119,86 @@ void readMIDI(byte channel, byte number, byte value) {
     xStepper.setSpeed(mapMIDIValueToSpeedRange(value));
   }
   if (number == 1) {
-    digitalWrite(XMotorDirPin, mapMIDIValueToSpinDirection(value));
+    XMotorDir = mapMIDIValueToBool(value);
+  }
+  if (number == 2) {
+    yStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+  }
+  if (number == 3) {
+    YMotorDir = mapMIDIValueToBool(value);
+  }
+  if (number == 4) {
+    zStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+  }
+  if (number == 5) {
+    ZMotorDir = mapMIDIValueToBool(value);
+  }
+  if (number == 6) {
+    aStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+  }
+  if (number == 7) {
+    AMotorDir = mapMIDIValueToBool(value);
+  }
+  if (number == 8) {
+    XMotorEn = mapMIDIValueToBool(value);
+  }
+  if (number == 9) {
+    YMotorEn = mapMIDIValueToBool(value);
+  }
+  if (number == 10) {
+    ZMotorEn = mapMIDIValueToBool(value);
+  }
+  if (number == 11) {
+    AMotorEn = mapMIDIValueToBool(value);
   }
 }
 
 void loop() {
   curMillis = millis();
+  MIDI.read();
 
   // Do something only every 'throttleMillis'
   if (curMillis - prevMillis >= throttleMillis) {
     prevMillis = curMillis;
 
-    Serial.println(xStepper.speed());
-    Serial.println(digitalRead(XMotorDirPin));
+    // Serial.println(zStepper.speed());
+    // Serial.print("ZDir: ");
+    // Serial.println(ZMotorDir);
+    // Serial.print("ZEn: ");
+    // Serial.println(ZMotorEn);
+    // Serial.println(yStepper.speed());
+    // Serial.print("YDir: ");
+    // Serial.println(YMotorDir);
+    // Serial.print("YEn: ");
+    // Serial.println(YMotorEn);
   }
 
-  // Run all motors as long as they are enabled
-  if (digitalRead(ZMotorEnPin)) {
-    // zStepper.setSpeed(1000);
-    zStepper.runSpeed();
-  }
-  if (digitalRead(XMotorEnPin)) {
-    // xStepper.setSpeed(1000);
+  // X Motor
+  digitalWrite(XMotorEnPin, XMotorEn);
+  if (XMotorEn) {
+    digitalWrite(XMotorDirPin, XMotorDir);
     xStepper.runSpeed();
   }
-  if (digitalRead(YMotorEnPin)) {
-    // yStepper.setSpeed(1000);
+
+  // Y Motor
+  digitalWrite(YMotorEnPin, YMotorEn);
+  if (YMotorEn) {
+    digitalWrite(YMotorDirPin, YMotorDir);
     yStepper.runSpeed();
   }
-  if (digitalRead(AMotorEnPin)) {
-    // aStepper.setSpeed(1000);
-    aStepper.runSpeed();
+
+  // Z Motor
+  digitalWrite(ZMotorEnPin, ZMotorEn);
+  if (ZMotorEn) {
+    digitalWrite(ZMotorDirPin, ZMotorDir);
+    zStepper.runSpeed();
   }
 
-  MIDI.read();
+  // A Motor
+  digitalWrite(AMotorEnPin, AMotorEn);
+  if (AMotorEn) {
+    digitalWrite(AMotorDirPin, AMotorDir);
+    aStepper.runSpeed();
+  }
 }
 
