@@ -51,7 +51,7 @@ struct SpeedRange {
   int maxSpeed;
 };
 
-SpeedRange motorSpeedRange = {1000, 6000};
+SpeedRange motorSpeedRange = {1000, 5000};
 
 int speedVal = motorSpeedRange.minSpeed;
 int motAccel = 80;
@@ -116,41 +116,61 @@ void readMIDI(byte channel, byte number, byte value) {
   // - ch7: aSpeed
   // - ch8: aDir
   if (number == 0) {
-    xStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+    if (value == 0) {
+      XMotorEn = 0;
+    } else {
+      XMotorEn = 1;
+      xStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+    }
   }
   if (number == 1) {
     XMotorDir = mapMIDIValueToBool(value);
   }
   if (number == 2) {
-    yStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+    if (value == 0) {
+      YMotorEn = 0;
+    } else {
+      YMotorEn = 1;
+      yStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+    }
   }
   if (number == 3) {
     YMotorDir = mapMIDIValueToBool(value);
   }
   if (number == 4) {
-    zStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+    if (value == 0) {
+      ZMotorEn = 0;
+    } else {
+      ZMotorEn = 1;
+      zStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+    }
   }
   if (number == 5) {
     ZMotorDir = mapMIDIValueToBool(value);
   }
   if (number == 6) {
-    aStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+    if (value == 0) {
+      AMotorEn = 0;
+    } else {
+      AMotorEn = 1 ;
+      aStepper.setSpeed(mapMIDIValueToSpeedRange(value));
+    }
   }
   if (number == 7) {
     AMotorDir = mapMIDIValueToBool(value);
   }
-  if (number == 8) {
-    XMotorEn = mapMIDIValueToBool(value);
-  }
-  if (number == 9) {
-    YMotorEn = mapMIDIValueToBool(value);
-  }
-  if (number == 10) {
-    ZMotorEn = mapMIDIValueToBool(value);
-  }
-  if (number == 11) {
-    AMotorEn = mapMIDIValueToBool(value);
-  }
+  // if (number == 8) {
+  //   XMotorEn = mapMIDIValueToBool(value);
+  // }
+  // if (number == 9) {
+  //   YMotorEn = mapMIDIValueToBool(value);
+  // }
+  // if (number == 10) {
+  //   ZMotorEn = mapMIDIValueToBool(value);
+  // }
+  // if (number == 11) {
+  //   AMotorEn = mapMIDIValueToBool(value);
+  // }
 }
 
 void loop() {
